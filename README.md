@@ -1,114 +1,82 @@
-# Super Mario Bros - Next.js 14 Retro Recreation
+# Super Mario Bros. Browser Recreation
 
-A fully functional, professional recreation of the iconic NES **Super Mario Bros.** built with **Next.js 14 (App Router)**, **TypeScript**, **Tailwind CSS**, HTML5 Canvas pixel rendering, and a custom **Web Audio API 8-bit Chiptune Synthesizer**.
+A browser recreation of the NES game Super Mario Bros., built with Next.js 14, TypeScript and the HTML5 Canvas API. All sprites are generated procedurally in code and all music and sound effects are synthesized at runtime with the Web Audio API, so the game ships with no image or audio asset files. The project is exported as a static site and deployed to GitHub Pages through a GitHub Actions workflow.
 
-![Super Mario Banner](https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png) *(Retro Arcade Experience)*
+## Features
 
----
+- Canvas renderer at NES resolution (256x240) with pixelated scaling to the browser window
+- Procedurally generated sprites cached on offscreen canvases (Mario in small, super and fire forms, Goombas, Koopa Troopas, Piranha Plants, blocks, pipes, flagpole, castle)
+- Platformer physics: acceleration, momentum, skidding, variable jump height and tile-based AABB collision
+- Enemy interactions: stomping, kicking Koopa shells, fireballs, Starman invincibility
+- Power-ups: Super Mushroom, Fire Flower, Starman and 1-UP Mushroom
+- Three levels: World 1-1 (overworld), World 1-2 (underground) and World 1-3 (sky platforms)
+- 8-bit chiptune music and sound effects synthesized with the Web Audio API, with volume control and mute
+- NES-style HUD with score, coins, world, timer and lives
+- Optional CRT scanline effect, fullscreen mode and a level-clear confetti effect
+- On-screen virtual gamepad for touch devices
+- High score table persisted in the browser's `localStorage`
+- In-game instructions screen
 
-## 🌟 Key Highlights & Features
+## Tech stack
 
-- **Pixel-Perfect Canvas Engine**:
-  - Crisp integer pixel rendering (`image-rendering: pixelated`) at authentic NES resolution (256x240) scaled to modern displays.
-  - Authentic procedural sprite generation with NES color palettes: Small Mario, Super Mario, Fire Mario, Starman rainbow invincibility, Goombas, Koopa Troopas, Piranha Plants, Bricks, Question Blocks, Coins, Pipes, Flagpoles, and Castle geometry.
-  - Zero external image or audio HTTP dependencies — guaranteed 100% offline functionality with zero broken URLs or CORS errors.
+| Area | Technology |
+| --- | --- |
+| Framework | Next.js 14.2 (App Router, static export) |
+| UI | React 18, Tailwind CSS 3.4, lucide-react |
+| Language | TypeScript 5 |
+| Rendering | HTML5 Canvas 2D |
+| Audio | Web Audio API |
+| Effects | canvas-confetti |
+| CI/CD | GitHub Actions, GitHub Pages |
 
-- **Authentic Physics & Controls**:
-  - Variable jump heights (short tap vs. sustained hold for maximum reach).
-  - Acceleration, momentum, skidding when reversing direction, and sliding friction.
-  - Stomping Goombas (squished state) and Koopas (knocked into shell).
-  - Kicking shells: slide across platforms to eliminate rows of enemies with combo score multipliers!
-  - Brick shattering for Super/Fire Mario with 4 spinning fragment physics particles.
-  - Mystery Question Blocks bumping upward with coin sparkles or mushroom/flower/star power-ups.
-  - Iconic Flagpole slide cutscene with bonus height scoring and autonomous castle entrance fanfare.
+## Getting started
 
-- **Pure Web Audio API Chiptune Synthesizer**:
-  - Overworld theme song melody & bassline loops synthesized via square and triangle wave oscillators.
-  - Underground subterranean theme music loop.
-  - Starman invincibility high-tempo theme.
-  - Full suite of classic sound effects: Small Jump, Super Jump, Coin pickup, Goomba Stomp, Shell Kick, Brick Break, Block Bump, Power-Up Spawn & Collect, Pipe descent, Fireball chirp, Flagpole slide, Stage Clear fanfare, and Game Over melody.
-  - Master volume slider and instant mute toggle (`M`).
+### Prerequisites
 
-- **Multi-World Support**:
-  - **World 1-1**: Classic Overworld with clouds, bushes, hills, question blocks, pipes, Goombas, Koopas, staircase, flagpole, and castle.
-  - **World 1-2**: Subterranean level with brick ceiling, cyan underground blocks, tricky pits, and piranha pipes.
-  - **World 1-3**: Athletic treetop sky level with floating mushroom platforms and precision jumping.
+- Node.js 18 or later (the CI workflow uses Node.js 20)
+- npm
 
-- **Arcade Bezel & Retro UI**:
-  - Authentic NES top HUD: `MARIO`, Score (zero-padded), Coins counter, `WORLD`, `TIME` countdown timer, and `LIVES`.
-  - Toggleable **CRT Scanline & Phosphor Flicker Shader** with monitor curvature aesthetics.
-  - On-screen touch / virtual gamepad for mobile, tablet, or mouse play.
-  - Fullscreen immersion mode.
-  - Local persistent Hall of Fame High Scores leaderboard.
-  - How-to-Play interactive game manual with item and controls breakdown.
+### Install and run
 
----
-
-## 🕹️ Controls Guide
-
-| Action | Keyboard Primary | Alternative | Virtual Gamepad |
-| :--- | :--- | :--- | :--- |
-| **Move Left** | `←` Left Arrow | `A` | D-Pad Left |
-| **Move Right** | `→` Right Arrow | `D` | D-Pad Right |
-| **Crouch** | `↓` Down Arrow | `S` | D-Pad Down |
-| **Jump / High Jump** | `Space` | `W` / `Z` / `K` | **A** Button |
-| **Dash / Fireball** | `Shift` | `X` / `J` | **B** Button |
-| **Pause / Resume** | `P` | `Escape` | START Button |
-| **Restart Level** | `R` | Top Toolbar | SELECT / RESTART |
-| **Mute Sound** | `M` | Top Toolbar | Audio Icon |
-
----
-
-## 🚀 Getting Started
-
-### 1. Requirements
-- Node.js 18+ (tested on Node v24)
-- npm 9+
-
-### 2. Installation & Run
 ```bash
-# Navigate to project folder
-cd super-mario
-
-# Install dependencies (if not already installed)
 npm install
-
-# Start development server
 npm run dev
-# OR run optimized production server
+```
+
+Open http://localhost:3000 in a browser.
+
+### Build
+
+```bash
 npm run build
-npm run start -p 3005
 ```
 
-Open [http://localhost:3005](http://localhost:3005) (or the port specified) in your browser.
+`next.config.mjs` sets `output: 'export'`, so the build writes a static site to `out/`. When the `GITHUB_ACTIONS` environment variable is `true`, the base path is set to `/super-mario` for hosting on GitHub Pages.
 
----
+## Controls
 
-## 📂 Project Architecture
+| Action | Keyboard | Virtual gamepad |
+| --- | --- | --- |
+| Move left / right | Left / Right arrows, A / D | D-pad |
+| Crouch | Down arrow, S | D-pad down |
+| Jump (hold for a higher jump) | Space, Up arrow, W, Z, K | A |
+| Run / throw fireball | Shift, X, J | B |
+| Pause / resume | P, Escape | Start |
+| Restart level | R | Select |
+| Mute | M | Toolbar |
+
+## Project structure
 
 ```
-super-mario/
-├── src/
-│   ├── app/
-│   │   ├── globals.css         # Custom CRT scanline effects, pixelated rendering & animations
-│   │   ├── layout.tsx          # Root layout & retro metadata
-│   │   └── page.tsx            # Main game page & reactive UI state coordinator
-│   ├── audio/
-│   │   └── soundEngine.ts      # Pure Web Audio API 8-bit chiptune sound & music synthesizer
-│   ├── components/
-│   │   ├── GameCanvas.tsx      # 60 FPS HTML5 Canvas loop, CRT monitor container & keyboard input
-│   │   ├── GameUI.tsx          # Authentic NES HUD, toolbar & modal overlays (Pause/GameOver/Clear)
-│   │   ├── HighScoresModal.tsx # LocalStorage Hall of Fame leaderboard
-│   │   ├── InstructionsModal.tsx# Game guide, power-ups, tips & controls
-│   │   └── VirtualGamepad.tsx  # Responsive touch D-Pad and action buttons for mobile
-│   ├── engine/
-│   │   ├── gameEngine.ts       # World state machine, camera tracking, cutscenes & rendering pipeline
-│   │   ├── levels.ts           # World 1-1, World 1-2, and World 1-3 level map definitions
-│   │   ├── physics.ts          # Momentum, AABB tile collisions, stomping & shell kick mechanics
-│   │   └── sprites.ts          # Procedural NES pixel art sprite generator & offscreen canvas cache
-│   └── types/
-│       └── game.ts             # TypeScript interfaces for entities, tiles, items & game state
-├── tailwind.config.ts
-├── package.json
-└── tsconfig.json
+src/
+  app/            Next.js layout, main page and global styles (CRT effect)
+  audio/          Web Audio chiptune synthesizer
+  components/     Game canvas, HUD, virtual gamepad, high score and instructions modals
+  engine/         Game loop, level data, physics and procedural sprite generation
+  types/          Shared TypeScript types
+.github/workflows/deploy.yml   Build and deploy to GitHub Pages
 ```
+
+## License
+
+No license has been specified for this project.
